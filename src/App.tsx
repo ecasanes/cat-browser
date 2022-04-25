@@ -1,15 +1,18 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
-import Browser from './pages/Browser';
+import { Route, Routes } from 'react-router-dom';
+import CatProvider from './context/CatProvider';
 import Details from './pages/Details';
+import Browser from './pages/Browser';
 
-function App() {
+const App = () => {
   return (
-    <Routes>
-      <Route path="/" element={<Browser />} />
-      <Route path="/:id" element={<Details />} />
-    </Routes>
+    <CatProvider>
+      <Routes>
+        <Route path="/" element={<Browser />} />
+        <Route path="/:imageId" element={<Details />} />
+      </Routes>
+    </CatProvider>
   );
-}
+};
 
 export default App;

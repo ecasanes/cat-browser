@@ -1,36 +1,12 @@
 import React, { createContext, useContext, useState } from 'react';
-
-export interface IBreed {
-  id: string;
-  name: string;
-}
-
-export interface ICat {
-  id: string;
-  url: string;
-}
-
-interface ICatProviderProps {
-  children?: React.ReactNode;
-}
-
-interface ICatContextState {
-  breeds: IBreed[];
-  setBreeds: React.Dispatch<React.SetStateAction<IBreed[]>>;
-  currentBreed: string;
-  setCurrentBreed: React.Dispatch<React.SetStateAction<string>>;
-  cats: ICat[];
-  setCats: React.Dispatch<React.SetStateAction<ICat[]>>;
-  currentCat: string;
-  setCurrentCat: React.Dispatch<React.SetStateAction<string>>;
-}
+import { IBreed, ICatContextState, ICatDetails, ICatProviderProps } from '../interfaces';
 
 export const CatContext = createContext({} as ICatContextState);
 
 const CatProvider: React.FC<ICatProviderProps> = ({ children }) => {
   const [breeds, setBreeds] = useState<IBreed[]>([]);
   const [currentBreed, setCurrentBreed] = useState('');
-  const [cats, setCats] = useState<ICat[]>([]);
+  const [cats, setCats] = useState<ICatDetails[]>([]);
   const [currentCat, setCurrentCat] = useState('');
 
   return (

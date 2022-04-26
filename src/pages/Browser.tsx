@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Col, Container, Row } from 'react-bootstrap';
+import { Button, Col, Container, Row, Alert } from 'react-bootstrap';
 import { getBreeds, getCatsByBreed } from '../api';
 import { useCatContext } from '../context/CatProvider';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -13,6 +13,7 @@ const Browser = () => {
   const [isLoadingCats, setIsLoadingCats] = useState(false);
   const [isLoadingBreeds, setIsLoadingBreeds] = useState(false);
   const [limitReached, setLimitReached] = useState(false);
+  const [hasError, setHasError] = useState(false);
 
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -49,6 +50,12 @@ const Browser = () => {
     setIsLoadingBreeds(true);
 
     const data = await getBreeds();
+
+    if (data === null) {
+      setHasError(true);
+      return;
+    }
+
     setBreeds(data);
     setIsLoadingBreeds(false);
   };
@@ -56,6 +63,11 @@ const Browser = () => {
   const populateCatsByBreed = async (loadMore = false) => {
     setIsLoadingCats(true);
     const data = await getCatsByBreed(currentBreed, page);
+
+    if (data === null) {
+      setHasError(true);
+      return;
+    }
 
     if (data.length == 0) {
       setLimitReached(true);
@@ -135,8 +147,13 @@ const Browser = () => {
           </Row>
           {cats.length == 0 && !isLoading ? <Info>No cats available</Info> : null}
         </Results>
+        {hasError && (
+          <Alert variant="danger">
+            Apologies but we could not load new cats for you at this time! Miau!
+          </Alert>
+        )}
         <Options>
-          {!limitReached && (
+          {!limitReached && !hasError && (
             <Button
               disabled={cats.length == 0 || isLoading}
               variant="success"

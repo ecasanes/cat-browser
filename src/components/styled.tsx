@@ -36,3 +36,7 @@ export const Results = styled.div``;
 export const Options = styled.div`
   margin-top: 20px;
 `;
+
+export const NotificationsContainer = styled.div`
+  margin-top: 20px;
+`;

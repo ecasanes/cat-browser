@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Col, Container, Row } from 'react-bootstrap';
+import { Alert, Button, Col, Container, Row } from 'react-bootstrap';
 import { Link, useParams } from 'react-router-dom';
 import { getSingleCat } from '../api';
 import { ICatDetails } from '../interfaces';
-import { Info, Main } from '../components/styled';
+import { Info, Main, NotificationsContainer } from '../components/styled';
 import CatCard from '../components/CatCard';
 
 const Details = () => {
   const { imageId } = useParams();
   const [catDetails, setCatDetails] = useState<ICatDetails>({} as ICatDetails);
   const [isLoading, setIsLoading] = useState(false);
+  const [hasError, setHasError] = useState(false);
 
   const populateCatDetails = async () => {
     if (!imageId) {
@@ -17,6 +18,11 @@ const Details = () => {
     }
 
     const data = await getSingleCat(imageId);
+
+    if (data === null) {
+      setHasError(true);
+      return;
+    }
 
     if (!data) {
       setIsLoading(false);
@@ -43,7 +49,7 @@ const Details = () => {
           <Col>
             {catDetails.id && (
               <CatCard
-                imageHeight="1300px"
+                imageHeight="100%"
                 url={catDetails.url}
                 header={
                   <Link to={`/?breed=${catDetails.breeds[0].id}`}>
@@ -57,10 +63,24 @@ const Details = () => {
                 <p>{catDetails.breeds[0].description}</p>
               </CatCard>
             )}
-            {isLoading && <Info>Loading...</Info>}
-            {catNotFound && <Info>Cat not Found</Info>}
           </Col>
         </Row>
+        <NotificationsContainer>
+          {isLoading && !hasError && <Info>Loading...</Info>}
+          {catNotFound && !hasError && (
+            <>
+              <Info>Cat not Found</Info>
+              <Link to="/">
+                <Button variant="primary">Back</Button>
+              </Link>
+            </>
+          )}
+          {hasError && (
+            <Alert variant="danger">
+              Apologies but we could not load new cats for you at this time! Miau!
+            </Alert>
+          )}
+        </NotificationsContainer>
       </Main>
     </Container>
   );

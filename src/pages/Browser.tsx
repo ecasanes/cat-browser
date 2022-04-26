@@ -3,7 +3,7 @@ import { Button, Col, Container, Row, Alert } from 'react-bootstrap';
 import { getBreeds, getCatsByBreed } from '../api';
 import { useCatContext } from '../context/CatProvider';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Info, Main, Options, Results, Title } from '../components/styled';
+import { Info, Main, NotificationsContainer, Options, Results, Title } from '../components/styled';
 import CatSelector from '../components/CatSelector';
 import CatCard from '../components/CatCard';
 
@@ -124,8 +124,8 @@ const Browser = () => {
 
   return (
     <Container>
-      <Title>Cat browser</Title>
       <Main>
+        <Title>Cat browser</Title>
         <CatSelector
           selectRef={selectRef}
           handleSelectBreed={handleSelectBreed}
@@ -147,11 +147,13 @@ const Browser = () => {
           </Row>
           {cats.length == 0 && !isLoading ? <Info>No cats available</Info> : null}
         </Results>
-        {hasError && (
-          <Alert variant="danger">
-            Apologies but we could not load new cats for you at this time! Miau!
-          </Alert>
-        )}
+        <NotificationsContainer>
+          {hasError && (
+            <Alert variant="danger">
+              Apologies but we could not load new cats for you at this time! Miau!
+            </Alert>
+          )}
+        </NotificationsContainer>
         <Options>
           {!limitReached && !hasError && (
             <Button

@@ -3,7 +3,7 @@ import { Alert, Button, Col, Container, Row } from 'react-bootstrap';
 import { Link, useParams } from 'react-router-dom';
 import { getSingleCat } from '../api';
 import { ICatDetails } from '../interfaces';
-import { Info, Main, NotificationsContainer } from '../components/styled';
+import { Info, Main, NotificationsContainer, Results } from '../components/styled';
 import CatCard from '../components/CatCard';
 
 const Details = () => {
@@ -45,26 +45,28 @@ const Details = () => {
   return (
     <Container>
       <Main>
-        <Row>
-          <Col>
-            {catDetails.id && (
-              <CatCard
-                imageHeight="100%"
-                url={catDetails.url}
-                header={
-                  <Link to={`/?breed=${catDetails.breeds[0].id}`}>
-                    <Button variant="primary">Back</Button>
-                  </Link>
-                }
-              >
-                <h4>{catDetails.breeds[0].name}</h4>
-                <h5>Origin: {catDetails.breeds[0].origin}</h5>
-                <h6>{catDetails.breeds[0].temperament}</h6>
-                <p>{catDetails.breeds[0].description}</p>
-              </CatCard>
-            )}
-          </Col>
-        </Row>
+        <Results>
+          <Row>
+            <Col>
+              {catDetails.id && (
+                <CatCard
+                  imageHeight="100%"
+                  url={catDetails.url}
+                  header={
+                    <Link to={`/?breed=${catDetails.breeds[0].id}`}>
+                      <Button variant="primary">Back</Button>
+                    </Link>
+                  }
+                >
+                  <h4>{catDetails.breeds[0].name}</h4>
+                  <h5>Origin: {catDetails.breeds[0].origin}</h5>
+                  <h6>{catDetails.breeds[0].temperament}</h6>
+                  <p>{catDetails.breeds[0].description}</p>
+                </CatCard>
+              )}
+            </Col>
+          </Row>
+        </Results>
         <NotificationsContainer>
           {isLoading && !hasError && <Info>Loading...</Info>}
           {catNotFound && !hasError && (

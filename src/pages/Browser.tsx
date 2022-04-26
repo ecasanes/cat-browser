@@ -23,7 +23,6 @@ const Browser = () => {
   const isLoading = isLoadingCats || isLoadingBreeds;
 
   const resetState = () => {
-    console.log('resetting state');
     setPage(0);
     setLimitReached(false);
     setIsLoadingCats(false);
@@ -37,7 +36,6 @@ const Browser = () => {
   };
 
   const handleSelectBreed = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log('handle select breed', event.target.value);
     const selectedBreed = event.target.value;
 
     resetState();
@@ -77,10 +75,9 @@ const Browser = () => {
 
     const [firstCat] = data;
     const foundDuplicate = cats.find((item) => {
-      console.log(`${firstCat.id} === ${item.id}`);
       return item.id === firstCat.id;
     });
-    console.log({ foundDuplicate });
+
     if (foundDuplicate) {
       setLimitReached(true);
       setIsLoadingCats(false);

@@ -17,7 +17,6 @@ export const getBreeds = async () => {
 };
 
 export const getCatsByBreed = async (breedId: string, page: number, limit = 6) => {
-  console.log('getting cats by breed: ', breedId, page, limit);
   try {
     const { data } = await instance.get(
       `/images/search?breed_id=${breedId}&limit=${limit}&page=${page}&order=DESC`
@@ -30,7 +29,6 @@ export const getCatsByBreed = async (breedId: string, page: number, limit = 6) =
 };
 
 export const getSingleCat = async (imageId: string) => {
-  console.log('getting single cat by id: ', imageId);
   try {
     const { data } = await instance.get(`/images/${imageId}`);
     return data;

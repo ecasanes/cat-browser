@@ -29,7 +29,6 @@ const Details = () => {
       return;
     }
 
-    console.log('details: ', data);
     setCatDetails(data);
     setIsLoading(false);
   };

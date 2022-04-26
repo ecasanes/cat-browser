@@ -1,38 +1,11 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
+import React, { useEffect, useRef, useState } from 'react';
+import { Button, Col, Container, Row } from 'react-bootstrap';
 import { getBreeds, getCatsByBreed } from '../api';
 import { useCatContext } from '../context/CatProvider';
-import styled from 'styled-components';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-
-const Title = styled.h2`
-  margin-top: 20px;
-  margin-bottom: 20px;
-`;
-
-const Info = styled.p`
-  font-size: 22px;
-`;
-
-const FormLabel = styled(Form.Label)`
-  font-size: 22px;
-  line-height: 1.8;
-`;
-
-const CatCard = styled(Card)`
-  margin: 10px 0;
-`;
-
-const CardImage = styled(Card.Img)`
-  object-fit: cover;
-  height: 200px;
-`;
-
-const Results = styled.div``;
-
-const Options = styled.div`
-  margin-top: 20px;
-`;
+import { Info, Main, Options, Results, Title } from '../components/styled';
+import CatSelector from '../components/CatSelector';
+import CatCard from '../components/CatCard';
 
 const Browser = () => {
   const { breeds, setBreeds, currentBreed, setCurrentBreed, cats, setCats } = useCatContext();
@@ -55,6 +28,11 @@ const Browser = () => {
     setIsLoadingCats(false);
     setIsLoadingBreeds(false);
     setCats([]);
+  };
+
+  const handleViewDetails = (id: string) => {
+    if (!id) return;
+    navigate(`/${id}`);
   };
 
   const handleSelectBreed = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -112,11 +90,6 @@ const Browser = () => {
     setPage((currentPage) => currentPage + 1);
   };
 
-  const handleViewDetails = (id: string) => {
-    if (!id) return;
-    navigate(`/${id}`);
-  };
-
   useEffect(() => {
     populateBreedSelection();
     return () => {
@@ -140,42 +113,22 @@ const Browser = () => {
   return (
     <Container>
       <Title>Cat browser</Title>
-      <main>
-        <Form>
-          <Form.Group as={Row} className="mb-3">
-            <FormLabel column sm="12" md="1" htmlFor="breed">
-              Breed
-            </FormLabel>
-            <Col sm="12" md="3">
-              <Form.Select
-                ref={selectRef}
-                defaultValue={breedQuery ? breedQuery : ''}
-                size="lg"
-                id="breed"
-                onChange={handleSelectBreed}
-                disabled={isLoading}
-              >
-                <option value="">Select breed</option>
-                {breeds.map(({ id, name }) => (
-                  <option key={id} value={id}>
-                    {name}
-                  </option>
-                ))}
-              </Form.Select>
-            </Col>
-          </Form.Group>
-        </Form>
+      <Main>
+        <CatSelector
+          selectRef={selectRef}
+          handleSelectBreed={handleSelectBreed}
+          breedQuery={breedQuery}
+          isLoading={isLoading}
+          breeds={breeds}
+        />
         <Results>
           <Row>
             {cats.map(({ id, url }) => (
               <Col sm={6} md={3} key={id}>
-                <CatCard className="cat-card" style={{ width: '100%' }}>
-                  <CardImage loading="lazy" variant="top" src={url} />
-                  <Card.Body className="d-grid">
-                    <Button variant="primary" onClick={() => handleViewDetails(id)}>
-                      View details
-                    </Button>
-                  </Card.Body>
+                <CatCard url={url}>
+                  <Button variant="primary" onClick={() => handleViewDetails(id)}>
+                    View details
+                  </Button>
                 </CatCard>
               </Col>
             ))}
@@ -193,7 +146,7 @@ const Browser = () => {
             </Button>
           )}
         </Options>
-      </main>
+      </Main>
     </Container>
   );
 };

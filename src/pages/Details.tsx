@@ -1,22 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Card, Col, Container, Row } from 'react-bootstrap';
+import { Button, Col, Container, Row } from 'react-bootstrap';
 import { Link, useParams } from 'react-router-dom';
 import { getSingleCat } from '../api';
-import styled from 'styled-components';
 import { ICatDetails } from '../interfaces';
-
-const CatCard = styled(Card)`
-  margin: 10px 0;
-`;
-
-const CardImage = styled(Card.Img)`
-  object-fit: cover;
-  height: 1300px;
-`;
-
-const Info = styled.h3`
-  margin-top: 50px;
-`;
+import { Info, Main } from '../components/styled';
+import CatCard from '../components/CatCard';
 
 const Details = () => {
   const { imageId } = useParams();
@@ -50,28 +38,30 @@ const Details = () => {
 
   return (
     <Container>
-      <Row>
-        <Col>
-          {catDetails.id && (
-            <CatCard className="cat-card" style={{ width: '100%' }}>
-              <Card.Body>
-                <Link to={`/?breed=${catDetails.breeds[0].id}`}>
-                  <Button variant="primary">Back</Button>
-                </Link>
-              </Card.Body>
-              <CardImage loading="lazy" variant="top" src={catDetails.url} />
-              <Card.Body className="d-grid">
+      <Main>
+        <Row>
+          <Col>
+            {catDetails.id && (
+              <CatCard
+                imageHeight="1300px"
+                url={catDetails.url}
+                header={
+                  <Link to={`/?breed=${catDetails.breeds[0].id}`}>
+                    <Button variant="primary">Back</Button>
+                  </Link>
+                }
+              >
                 <h4>{catDetails.breeds[0].name}</h4>
                 <h5>Origin: {catDetails.breeds[0].origin}</h5>
                 <h6>{catDetails.breeds[0].temperament}</h6>
                 <p>{catDetails.breeds[0].description}</p>
-              </Card.Body>
-            </CatCard>
-          )}
-          {isLoading && <Info>Loading...</Info>}
-          {catNotFound && <Info>Cat not Found</Info>}
-        </Col>
-      </Row>
+              </CatCard>
+            )}
+            {isLoading && <Info>Loading...</Info>}
+            {catNotFound && <Info>Cat not Found</Info>}
+          </Col>
+        </Row>
+      </Main>
     </Container>
   );
 };
